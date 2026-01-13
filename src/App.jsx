@@ -28,8 +28,6 @@ import {
 } from 'lucide-react';
 
 // Dynamically import html2canvas to avoid build errors if not available
-// In a real project, you would ensure 'npm install html2canvas' is run.
-// For this environment, we will use a CDN approach or try-catch block for safety.
 let html2canvas;
 try {
   import('html2canvas').then(module => {
@@ -40,7 +38,6 @@ try {
 } catch (e) {
   console.warn("Dynamic import failed");
 }
-
 
 // ... TikTokIcon component ...
 const TikTokIcon = ({ className }) => (
@@ -324,7 +321,7 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
           {/* Header */}
           <div className="flex flex-col items-center justify-center mb-4 border-b-2 border-stone-800 pb-4 border-dashed">
             <div className="w-16 h-16 mb-2 rounded-xl overflow-hidden border border-stone-200">
-               <img src="iMaster.png" alt="Logo" className="w-full h-full object-contain" />
+               <img src="app-logo.svg" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-2xl font-black text-stone-900 uppercase tracking-widest">iMaster Café</h1>
             <p className="text-xs text-stone-500 uppercase tracking-widest font-bold">Coffee & Drinks</p>
@@ -559,16 +556,36 @@ export default function App() {
   const totalCartItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const totalCartPrice = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
-  // Add Favicon and Document Title
+  // Add Favicon and Document Title and Home Screen Icons
   useEffect(() => {
     document.title = "iMaster Café | Menu";
-    let link = document.querySelector("link[rel~='icon']");
-    if (!link) {
-      link = document.createElement('link');
-      link.rel = 'icon';
-      document.head.appendChild(link);
+    
+    // Helper to set link tags
+    const setLink = (rel, href) => {
+      let link = document.querySelector(`link[rel~='${rel}']`);
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = rel;
+        document.head.appendChild(link);
+      }
+      link.href = href;
+    };
+
+    // Favicon
+    setLink('icon', 'app-logo.svg');
+    
+    // iOS Home Screen Icon
+    setLink('apple-touch-icon', 'app-logo.svg');
+
+    // Android/Chrome Theme Color
+    let metaTheme = document.querySelector("meta[name='theme-color']");
+    if (!metaTheme) {
+      metaTheme = document.createElement('meta');
+      metaTheme.name = 'theme-color';
+      document.head.appendChild(metaTheme);
     }
-    link.href = 'iMaster.png'; 
+    metaTheme.content = '#be123c'; // rose-700
+    
   }, []);
 
   useEffect(() => {
@@ -640,7 +657,7 @@ export default function App() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-xl overflow-hidden shadow-lg shadow-rose-900/20 bg-white border border-stone-100 flex items-center justify-center p-1">
-                 <img src="iMaster.png" alt="iMaster Logo" className="w-full h-full object-contain" />
+                 <img src="app-logo.svg" alt="iMaster Logo" className="w-full h-full object-contain" />
               </div>
               <div>
                 <h1 className="text-2xl font-black text-stone-800 tracking-tight leading-none">iMaster Café</h1>
@@ -795,7 +812,7 @@ export default function App() {
         <div className="max-w-3xl mx-auto px-4 text-center">
           <div className="flex justify-center items-center gap-4 mb-8">
             <div className="bg-white/10 p-2.5 rounded-2xl">
-                 <img src="iMaster.png" alt="iMaster Logo" className="w-8 h-8 object-contain" />
+                 <img src="app-logo.svg" alt="iMaster Logo" className="w-8 h-8 object-contain" />
             </div>
             <span className="text-3xl font-black text-white tracking-tight">iMaster Café</span>
           </div>
