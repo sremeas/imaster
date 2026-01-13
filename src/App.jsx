@@ -320,8 +320,9 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
         <div ref={receiptRef} className="w-[380px] bg-white p-6 rounded-none text-stone-800 font-sans border border-stone-200">
           {/* Header */}
           <div className="flex flex-col items-center justify-center mb-4 border-b-2 border-stone-800 pb-4 border-dashed">
-            <div className="w-16 h-16 mb-2 rounded-xl overflow-hidden border border-stone-200">
-               <img src="app-logo.svg" alt="Logo" className="w-full h-full object-contain" />
+            {/* UPDATED: Larger Logo without border constraints for better fit */}
+            <div className="w-24 h-24 mb-2 flex items-center justify-center">
+               <img src="app-logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-2xl font-black text-stone-900 uppercase tracking-widest">iMaster Café</h1>
             <p className="text-xs text-stone-500 uppercase tracking-widest font-bold">Coffee & Drinks</p>
