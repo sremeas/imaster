@@ -52,16 +52,16 @@ const MENU_DATA = [
         nameEn: "Americano", 
         nameKh: "អាមេរិកខេនណូ", 
         // EXAMPLE: How to add an image (remove // to enable after adding file)
-        image: "/images/coffee/iced-americano.jpeg", 
+        image: "images/coffee/iced-americano.jpeg", 
         prices: { m: { hot: 5000, ice: 6000 }, l: { hot: 6000, ice: 7000 } } 
       },
-      { id: 2, nameEn: "Cappuccino", nameKh: "កាពូឈីណូ", image: "/images/coffee/iced-cappuccino.jpg", prices: { m: { hot: 5000, ice: 6000, frappe: 8000 }, l: { hot: 6000, ice: 8000, frappe: 8500 } } },
-      { id: 3, nameEn: "Latte Coffee", nameKh: "កាហ្វេឡាតេ", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { hot: 5000, ice: 6000, frappe: 7000 }, l: { hot: 6000, ice: 7000, frappe: 7500 } } },
-      { id: 4, nameEn: "Signature Coffee", nameKh: "កាហ្វេទឹកដោះគោ", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { hot: 5000, ice: 6000, frappe: 7000 }, l: { hot: 6000, ice: 7000, frappe: 7500 } } },
-      { id: 5, nameEn: "Latte Vanilla", nameKh: "ឡាតេវ៉ាន់នីឡា", image: "/images/coffee/IcedCaffeLattewProtein.jpg",  prices: { m: { hot: 6000, ice: 7000 }, l: { hot: 7000, ice: 8000 } } }, 
-      { id: 6, nameEn: "Latte Caramel", nameKh: "ឡាតេខារ៉ាមែល", image: "/images/coffee/IcedCaramelProteinLatte.jpg",  prices: { m: { hot: 5000, ice: 6000, frappe: 7500 }, l: { hot: 6000, ice: 7000, frappe: 8000 } } },
-      { id: 7, nameEn: "Mocha", nameKh: "ម៉ូកា", image: "/images/coffee/iced-mocha.jpeg",  prices: { m: { hot: 5000, ice: 6000, frappe: 7000 }, l: { hot: 6000, ice: 7000, frappe: 8000 } } },
-      { id: 8, nameEn: "Coconut Coffee", nameKh: "កាហ្វេដូង", image: "/images/coffee/IcedCaramelProteinLatte.jpg",  prices: { m: { ice: 6000 }, l: { ice: 7000 } } },
+      { id: 2, nameEn: "Cappuccino", nameKh: "កាពូឈីណូ", image: "images/coffee/iced-cappuccino.jpg", prices: { m: { hot: 5000, ice: 6000, frappe: 8000 }, l: { hot: 6000, ice: 8000, frappe: 8500 } } },
+      { id: 3, nameEn: "Latte Coffee", nameKh: "កាហ្វេឡាតេ", image: "images/coffee/iced-latte.jpeg",  prices: { m: { hot: 5000, ice: 6000, frappe: 7000 }, l: { hot: 6000, ice: 7000, frappe: 7500 } } },
+      { id: 4, nameEn: "Signature Coffee", nameKh: "កាហ្វេទឹកដោះគោ", image: "images/coffee/iced-latte.jpeg",  prices: { m: { hot: 5000, ice: 6000, frappe: 7000 }, l: { hot: 6000, ice: 7000, frappe: 7500 } } },
+      { id: 5, nameEn: "Latte Vanilla", nameKh: "ឡាតេវ៉ាន់នីឡា", image: "images/coffee/IcedCaffeLattewProtein.jpg",  prices: { m: { hot: 6000, ice: 7000 }, l: { hot: 7000, ice: 8000 } } }, 
+      { id: 6, nameEn: "Latte Caramel", nameKh: "ឡាតេខារ៉ាមែល", image: "images/coffee/IcedCaramelProteinLatte.jpg",  prices: { m: { hot: 5000, ice: 6000, frappe: 7500 }, l: { hot: 6000, ice: 7000, frappe: 8000 } } },
+      { id: 7, nameEn: "Mocha", nameKh: "ម៉ូកា", image: "images/coffee/iced-mocha.jpeg",  prices: { m: { hot: 5000, ice: 6000, frappe: 7000 }, l: { hot: 6000, ice: 7000, frappe: 8000 } } },
+      { id: 8, nameEn: "Coconut Coffee", nameKh: "កាហ្វេដូង", image: "images/coffee/IcedCaramelProteinLatte.jpg",  prices: { m: { ice: 6000 }, l: { ice: 7000 } } },
     ]
   },
   {
@@ -69,9 +69,9 @@ const MENU_DATA = [
     categoryKh: "ម៉ាតឆា",
     icon: <UtensilsCrossed className="w-5 h-5" />, 
     items: [
-      { id: 9, nameEn: "Matcha Strawberry", nameKh: "ម៉ាតឆាស្ត្របឺរី", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
-      { id: 10, nameEn: "Matcha Coconut Cream", nameKh: "ម៉ាឆាដូងត្រឹម", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
-      { id: 11, nameEn: "Matcha Latte", nameKh: "ម៉ាតឆាឡាតេ", image: "/images/coffee/iced-matcha.jpeg",  prices: { m: { hot: 5000, ice: 6000 }, l: { hot: 6000, ice: 8000 } } },
+      { id: 9, nameEn: "Matcha Strawberry", nameKh: "ម៉ាតឆាស្ត្របឺរី", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
+      { id: 10, nameEn: "Matcha Coconut Cream", nameKh: "ម៉ាឆាដូងត្រឹម", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
+      { id: 11, nameEn: "Matcha Latte", nameKh: "ម៉ាតឆាឡាតេ", image: "images/coffee/iced-matcha.jpeg",  prices: { m: { hot: 5000, ice: 6000 }, l: { hot: 6000, ice: 8000 } } },
     ]
   },
   {
@@ -79,12 +79,12 @@ const MENU_DATA = [
     categoryKh: "តែទឹកដោះគោ",
     icon: <Milk className="w-5 h-5" />,
     items: [
-      { id: 12, nameEn: "Green Milk Tea", nameKh: "តែបៃតងទឹកដោះគោ", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { hot: 4000, ice: 5000, frappe: 6000 }, l: { hot: 6000, ice: 7000, frappe: 8000 } } },
-      { id: 13, nameEn: "Red Milk Tea", nameKh: "តែក្រហមទឹកដោះគោ", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { hot: 4000, ice: 5000, frappe: 6000 }, l: { hot: 6000, ice: 7000, frappe: 8000 } } },
-      { id: 14, nameEn: "Black Milk Tea", nameKh: "តែខ្មៅទឹកដោះគោ", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 5000 }, l: { ice: 7000 } } },
-      { id: 15, nameEn: "Brown Sugar Milk Tea", nameKh: "តែស្ករត្នោតទឹកដោះគោ", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
-      { id: 16, nameEn: "Strawberry Cream Green Tea", nameKh: "តែបៃតងស្ត្របឺរីគ្រីម", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
-      { id: 17, nameEn: "Strawberry Latte", nameKh: "ស្ត្របឺរីឡាតេ", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
+      { id: 12, nameEn: "Green Milk Tea", nameKh: "តែបៃតងទឹកដោះគោ", image: "images/coffee/iced-latte.jpeg",  prices: { m: { hot: 4000, ice: 5000, frappe: 6000 }, l: { hot: 6000, ice: 7000, frappe: 8000 } } },
+      { id: 13, nameEn: "Red Milk Tea", nameKh: "តែក្រហមទឹកដោះគោ", image: "images/coffee/iced-latte.jpeg",  prices: { m: { hot: 4000, ice: 5000, frappe: 6000 }, l: { hot: 6000, ice: 7000, frappe: 8000 } } },
+      { id: 14, nameEn: "Black Milk Tea", nameKh: "តែខ្មៅទឹកដោះគោ", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 5000 }, l: { ice: 7000 } } },
+      { id: 15, nameEn: "Brown Sugar Milk Tea", nameKh: "តែស្ករត្នោតទឹកដោះគោ", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
+      { id: 16, nameEn: "Strawberry Cream Green Tea", nameKh: "តែបៃតងស្ត្របឺរីគ្រីម", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
+      { id: 17, nameEn: "Strawberry Latte", nameKh: "ស្ត្របឺរីឡាតេ", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
     ]
   },
   {
@@ -92,7 +92,7 @@ const MENU_DATA = [
     categoryKh: "សូកូឡា",
     icon: <IceCream2 className="w-5 h-5" />,
     items: [
-      { id: 22, nameEn: "Chocolate", nameKh: "សូកូឡា", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { hot: 5000, ice: 6000, frappe: 7000 }, l: { hot: 6000, ice: 8000, frappe: 9000 } } },
+      { id: 22, nameEn: "Chocolate", nameKh: "សូកូឡា", image: "images/coffee/iced-latte.jpeg",  prices: { m: { hot: 5000, ice: 6000, frappe: 7000 }, l: { hot: 6000, ice: 8000, frappe: 9000 } } },
     ]
   },
   {
@@ -100,10 +100,10 @@ const MENU_DATA = [
     categoryKh: "សូដា",
     icon: <CupSoda className="w-5 h-5" />,
     items: [
-      { id: 23, nameEn: "Passion Soda", nameKh: "ផាសិនសូដា", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
-      { id: 24, nameEn: "Passion Cream Soda", nameKh: "ផាសិនក្រីមសូដា", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
-      { id: 25, nameEn: "Blue Sky Soda", nameKh: "ប្លូស្កាយសូដា", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
-      { id: 26, nameEn: "Strawberry Soda", nameKh: "ស្ត្របឺរីសូដា", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
+      { id: 23, nameEn: "Passion Soda", nameKh: "ផាសិនសូដា", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
+      { id: 24, nameEn: "Passion Cream Soda", nameKh: "ផាសិនក្រីមសូដា", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
+      { id: 25, nameEn: "Blue Sky Soda", nameKh: "ប្លូស្កាយសូដា", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
+      { id: 26, nameEn: "Strawberry Soda", nameKh: "ស្ត្របឺរីសូដា", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 6000 }, l: { ice: 8000 } } },
     ]
   },
   {
@@ -111,8 +111,8 @@ const MENU_DATA = [
     categoryKh: "តែក្រូចឆ្មា",
     icon: <Citrus className="w-5 h-5" />,
     items: [
-      { id: 18, nameEn: "Lemon Red Tea", nameKh: "តែក្រហមក្រូចឆ្មា", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { hot: 4000, ice: 4500 }, l: { hot: 5000, ice: 5500 } } },
-      { id: 19, nameEn: "Lemon Green Tea", nameKh: "តែបៃតងក្រូចឆ្មា", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { hot: 4000, ice: 4500 }, l: { hot: 5000, ice: 5500 } } },
+      { id: 18, nameEn: "Lemon Red Tea", nameKh: "តែក្រហមក្រូចឆ្មា", image: "images/coffee/iced-latte.jpeg",  prices: { m: { hot: 4000, ice: 4500 }, l: { hot: 5000, ice: 5500 } } },
+      { id: 19, nameEn: "Lemon Green Tea", nameKh: "តែបៃតងក្រូចឆ្មា", image: "images/coffee/iced-latte.jpeg",  prices: { m: { hot: 4000, ice: 4500 }, l: { hot: 5000, ice: 5500 } } },
     ]
   },
   {
@@ -120,8 +120,8 @@ const MENU_DATA = [
     categoryKh: "ផ្លែឈើក្រឡុក",
     icon: <GlassWater className="w-5 h-5" />,
     items: [
-      { id: 27, nameEn: "Passion Smoothie", nameKh: "ផាសិនក្រឡុក", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { frappe: 6000 }, l: { frappe: 8000 } } },
-      { id: 28, nameEn: "Strawberry Smoothie", nameKh: "ស្ត្របឺរីក្រឡុក", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { frappe: 6500 }, l: { frappe: 8000 } } },
+      { id: 27, nameEn: "Passion Smoothie", nameKh: "ផាសិនក្រឡុក", image: "images/coffee/iced-latte.jpeg",  prices: { m: { frappe: 6000 }, l: { frappe: 8000 } } },
+      { id: 28, nameEn: "Strawberry Smoothie", nameKh: "ស្ត្របឺរីក្រឡុក", image: "images/coffee/iced-latte.jpeg",  prices: { m: { frappe: 6500 }, l: { frappe: 8000 } } },
     ]
   },
   {
@@ -129,8 +129,8 @@ const MENU_DATA = [
     categoryKh: "ទឹកដោះគោស្រស់",
     icon: <Milk className="w-5 h-5" />,
     items: [
-      { id: 20, nameEn: "Honey Milk", nameKh: "ទឹកដោះគោស្រស់ទឹកឃ្មុំ", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 5000 }, l: { ice: 7000 } } },
-      { id: 21, nameEn: "Passion Milk", nameKh: "ផាសិនទឹកដោះគោស្រស់", image: "/images/coffee/iced-latte.jpeg",  prices: { m: { ice: 5000 }, l: { ice: 6000 } } },
+      { id: 20, nameEn: "Honey Milk", nameKh: "ទឹកដោះគោស្រស់ទឹកឃ្មុំ", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 5000 }, l: { ice: 7000 } } },
+      { id: 21, nameEn: "Passion Milk", nameKh: "ផាសិនទឹកដោះគោស្រស់", image: "images/coffee/iced-latte.jpeg",  prices: { m: { ice: 5000 }, l: { ice: 6000 } } },
     ]
   },
   {
