@@ -575,7 +575,7 @@ export default function App() {
     setLink('icon', 'app-logo.svg');
     
     // iOS Home Screen Icon
-    setLink('apple-touch-icon', 'app-logo.svg');
+    setLink('apple-touch-icon', 'app-logo.png');
 
     // Android/Chrome Theme Color
     let metaTheme = document.querySelector("meta[name='theme-color']");
