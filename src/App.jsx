@@ -24,7 +24,8 @@ import {
   Receipt,
   MoreHorizontal,
   Send,
-  Share2
+  Share2,
+  DollarSign
 } from 'lucide-react';
 
 // Dynamically import html2canvas to avoid build errors if not available
@@ -169,17 +170,17 @@ const getCategoryStyles = (categoryName) => {
   }
 };
 
-const PriceTag = ({ label, price, onClick }) => (
+const PriceTag = ({ label, displayPrice, onClick }) => (
   <button 
     onClick={onClick}
     className="flex flex-col items-center min-w-[4rem] bg-white/80 hover:bg-rose-50 active:bg-rose-100 rounded-md py-1.5 px-1 border border-stone-200 hover:border-rose-200 transition-all cursor-pointer group shadow-sm active:scale-95"
   >
     <span className="text-[11px] text-gray-500 group-hover:text-rose-600 font-bold tracking-tight mb-0.5">{label}</span>
-    <span className="text-sm font-bold text-rose-900">{price?.toLocaleString()}៛</span>
+    <span className="text-sm font-bold text-rose-900">{displayPrice}</span>
   </button>
 );
 
-const MenuItem = ({ item, categoryName, onAddToCart }) => {
+const MenuItem = ({ item, categoryName, onAddToCart, formatPrice }) => {
   const { bg, icon } = getCategoryStyles(categoryName);
   
   return (
@@ -216,18 +217,18 @@ const MenuItem = ({ item, categoryName, onAddToCart }) => {
             <div className="flex items-center gap-2">
                <span className="text-xs font-bold text-stone-400 bg-stone-100 px-2 py-0.5 rounded w-6 text-center">M</span>
                <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
-                 {item.prices.m.hot && <PriceTag label="HOT" price={item.prices.m.hot} onClick={() => onAddToCart(item, 'M', 'Hot', item.prices.m.hot)} />}
-                 {item.prices.m.ice && <PriceTag label="ICE" price={item.prices.m.ice} onClick={() => onAddToCart(item, 'M', 'Ice', item.prices.m.ice)} />}
-                 {item.prices.m.frappe && <PriceTag label="FRP" price={item.prices.m.frappe} onClick={() => onAddToCart(item, 'M', 'Frappe', item.prices.m.frappe)} />}
+                 {item.prices.m.hot && <PriceTag label="HOT" displayPrice={formatPrice(item.prices.m.hot)} onClick={() => onAddToCart(item, 'M', 'Hot', item.prices.m.hot)} />}
+                 {item.prices.m.ice && <PriceTag label="ICE" displayPrice={formatPrice(item.prices.m.ice)} onClick={() => onAddToCart(item, 'M', 'Ice', item.prices.m.ice)} />}
+                 {item.prices.m.frappe && <PriceTag label="FRP" displayPrice={formatPrice(item.prices.m.frappe)} onClick={() => onAddToCart(item, 'M', 'Frappe', item.prices.m.frappe)} />}
                </div>
             </div>
             
              <div className="flex items-center gap-2">
                <span className="text-xs font-bold text-stone-400 bg-stone-100 px-2 py-0.5 rounded w-6 text-center">L</span>
                <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
-                 {item.prices.l.hot && <PriceTag label="HOT" price={item.prices.l.hot} onClick={() => onAddToCart(item, 'L', 'Hot', item.prices.l.hot)} />}
-                 {item.prices.l.ice && <PriceTag label="ICE" price={item.prices.l.ice} onClick={() => onAddToCart(item, 'L', 'Ice', item.prices.l.ice)} />}
-                 {item.prices.l.frappe && <PriceTag label="FRP" price={item.prices.l.frappe} onClick={() => onAddToCart(item, 'L', 'Frappe', item.prices.l.frappe)} />}
+                 {item.prices.l.hot && <PriceTag label="HOT" displayPrice={formatPrice(item.prices.l.hot)} onClick={() => onAddToCart(item, 'L', 'Hot', item.prices.l.hot)} />}
+                 {item.prices.l.ice && <PriceTag label="ICE" displayPrice={formatPrice(item.prices.l.ice)} onClick={() => onAddToCart(item, 'L', 'Ice', item.prices.l.ice)} />}
+                 {item.prices.l.frappe && <PriceTag label="FRP" displayPrice={formatPrice(item.prices.l.frappe)} onClick={() => onAddToCart(item, 'L', 'Frappe', item.prices.l.frappe)} />}
                </div>
             </div>
           </div>
@@ -238,7 +239,7 @@ const MenuItem = ({ item, categoryName, onAddToCart }) => {
 };
 
 // ... CartModal component ...
-const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onClearCart }) => {
+const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onClearCart, formatPrice }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const receiptRef = useRef(null);
 
@@ -320,7 +321,7 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
         <div ref={receiptRef} className="w-[380px] bg-white p-6 rounded-none text-stone-800 font-sans border border-stone-200">
           {/* Header */}
           <div className="flex flex-col items-center justify-center mb-4 border-b-2 border-stone-800 pb-4 border-dashed">
-            {/* UPDATED: Larger Logo without border constraints for better fit */}
+            {/* Larger Logo without border */}
             <div className="w-24 h-24 mb-2 flex items-center justify-center">
                <img src="app-logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
@@ -340,7 +341,7 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
                     <span className="text-xs text-stone-500 font-khmer">{item.nameKh} ({item.size} - {item.type})</span>
                   </div>
                 </div>
-                <span className="font-bold whitespace-nowrap">{(item.price * item.quantity).toLocaleString()}៛</span>
+                <span className="font-bold whitespace-nowrap">{formatPrice(item.price * item.quantity)}</span>
               </div>
             ))}
           </div>
@@ -349,7 +350,7 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
           <div className="border-t-2 border-dashed border-stone-800 pt-3 mb-6">
             <div className="flex justify-between items-center text-xl font-black">
               <span>TOTAL</span>
-              <span>{total.toLocaleString()}៛</span>
+              <span>{formatPrice(total)}</span>
             </div>
             <p className="text-xs text-center mt-2 text-stone-400">Items: {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</p>
           </div>
@@ -415,7 +416,7 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
                 </div>
                 
                 <div className="flex flex-col items-end gap-2">
-                  <span className="font-bold text-stone-800 text-base">{(item.price * item.quantity).toLocaleString()}៛</span>
+                  <span className="font-bold text-stone-800 text-base">{formatPrice(item.price * item.quantity)}</span>
                   <div className="flex items-center gap-3 bg-white rounded-lg border border-stone-200 p-1">
                     <button 
                       onClick={() => onUpdateQuantity(item.cartId, -1)}
@@ -441,7 +442,7 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
           <div className="p-4 border-t border-stone-100 bg-stone-50 rounded-b-2xl space-y-3">
             <div className="flex justify-between items-center mb-2">
               <span className="text-stone-600 font-medium text-lg">Total Amount</span>
-              <span className="text-2xl font-black text-rose-700">{total.toLocaleString()}៛</span>
+              <span className="text-2xl font-black text-rose-700">{formatPrice(total)}</span>
             </div>
             
             <button 
@@ -470,6 +471,7 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState("Coffee");
   const [searchQuery, setSearchQuery] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [currency, setCurrency] = useState('KHR'); // 'KHR' or 'USD'
   
   // Cart State
   const [cart, setCart] = useState([]);
@@ -479,6 +481,15 @@ export default function App() {
 
   // Nav Ref for auto-scrolling
   const navRef = useRef(null);
+
+  // Helper function to format price based on currency
+  const formatPrice = (priceInRiel) => {
+    if (currency === 'USD') {
+      const usdPrice = priceInRiel / 4000;
+      return `$${usdPrice.toFixed(2)}`;
+    }
+    return `${priceInRiel.toLocaleString()}៛`;
+  };
 
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
@@ -627,7 +638,7 @@ export default function App() {
   }, [activeCategory, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-stone-50 font-sans pb-32 relative selection:bg-rose-100">
+    <div className="min-h-screen bg-stone-100 font-sans relative selection:bg-rose-100">
       {/* Font Loader for Khmer Font */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap');
@@ -650,27 +661,40 @@ export default function App() {
         cartItems={cart} 
         onUpdateQuantity={updateQuantity}
         onClearCart={clearCart}
+        formatPrice={formatPrice}
       />
 
       {/* Sticky Header */}
       <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md shadow-sm border-b border-stone-100">
-        <div className="max-w-3xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
+        <div className="max-w-3xl mx-auto px-4 py-2">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-xl overflow-hidden shadow-lg shadow-rose-900/20 bg-white border border-stone-100 flex items-center justify-center p-1">
+              <div className="w-12 h-12 rounded-xl overflow-hidden shadow-lg shadow-rose-900/20 bg-white border border-stone-100 flex items-center justify-center p-1">
                  <img src="app-logo.svg" alt="iMaster Logo" className="w-full h-full object-contain" />
               </div>
               <div>
-                <h1 className="text-2xl font-black text-stone-800 tracking-tight leading-none">iMaster Café</h1>
-                <p className="text-xs uppercase tracking-widest text-stone-500 font-bold mt-1.5">Coffee & Drinks</p>
+                <h1 className="text-xl font-black text-stone-800 tracking-tight leading-none">iMaster Café</h1>
+                <p className="text-xs uppercase tracking-widest text-stone-500 font-bold mt-0">Coffee & Drinks</p>
               </div>
             </div>
             
             <div className="flex items-center gap-2">
+                {/* Currency Switcher */}
+                <button 
+                  onClick={() => setCurrency(c => c === 'KHR' ? 'USD' : 'KHR')}
+                  className="relative p-2 rounded-full hover:bg-stone-100 text-stone-600 transition-colors font-bold"
+                >
+                  {currency === 'KHR' ? (
+                    <span className="text-xl text-emerald-600">$</span> 
+                  ) : (
+                    <span className="text-xl text-rose-700">៛</span>
+                  )}
+                </button>
+
                 {/* Search Toggle Button */}
                 <button 
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  className={`relative p-2.5 rounded-full transition-all duration-300 ${isSearchOpen ? 'bg-rose-100 text-rose-700' : 'hover:bg-stone-100 text-stone-600'}`}
+                  className={`relative p-2 rounded-full transition-all duration-300 ${isSearchOpen ? 'bg-rose-100 text-rose-700' : 'hover:bg-stone-100 text-stone-600'}`}
                 >
                   {isSearchOpen ? <X className="w-6 h-6" /> : <Search className="w-6 h-6" />}
                 </button>
@@ -678,7 +702,7 @@ export default function App() {
                 {/* Header Cart Button (Desktop/Tablet) */}
                 <button 
                   onClick={() => setIsCartOpen(true)}
-                  className="relative p-2.5 rounded-full hover:bg-stone-100 text-stone-600 transition-colors"
+                  className="relative p-2 rounded-full hover:bg-stone-100 text-stone-600 transition-colors"
                 >
                   <ShoppingBag className="w-7 h-7" />
                   {totalCartItems > 0 && (
@@ -725,7 +749,7 @@ export default function App() {
                 key={cat.category}
                 onClick={(e) => handleCategoryClick(e, cat.category)}
                 className={`
-                  flex flex-col items-center gap-1.5 px-6 py-3.5 text-sm sm:text-base font-medium transition-all duration-300 border-b-[3px]
+                  flex flex-col items-center gap-1 px-6 py-2 text-sm sm:text-base font-medium transition-all duration-300 border-b-[3px]
                   ${activeCategory === cat.category && !searchQuery
                     ? 'border-rose-700 text-rose-700 bg-rose-50/30' 
                     : 'border-transparent text-stone-400 hover:text-stone-600 hover:bg-stone-50'}
@@ -742,11 +766,11 @@ export default function App() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-3xl mx-auto px-3 sm:px-4 py-5 sm:py-7">
+      <main className="max-w-3xl mx-auto px-3 sm:px-4 py-3 sm:py-5">
         {displayData.map((section, idx) => (
-          <div key={idx} className="mb-10 last:mb-0">
+          <div key={idx} className="mb-6 last:mb-0">
             {searchQuery && (
-              <div className="sticky top-[176px] bg-stone-50/95 backdrop-blur-sm py-4 z-10 px-1 -mx-1 mb-2">
+              <div className="sticky top-[120px] bg-stone-100/95 backdrop-blur-sm py-2 z-10 px-1 -mx-1 mb-2">
                  <h2 className="text-xl font-bold text-stone-700 flex items-center gap-3">
                   <span className="w-1.5 h-7 bg-rose-500 rounded-full"></span>
                   {section.category}
@@ -757,7 +781,13 @@ export default function App() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {section.items.map((item) => (
-                <MenuItem key={item.id} item={item} categoryName={section.category || activeCategory} onAddToCart={addToCart} />
+                <MenuItem 
+                  key={item.id} 
+                  item={item} 
+                  categoryName={section.category || activeCategory} 
+                  onAddToCart={addToCart}
+                  formatPrice={formatPrice}
+                />
               ))}
             </div>
 
@@ -786,7 +816,7 @@ export default function App() {
               </div>
               <div className="flex flex-col items-start">
                 <span className="text-sm text-rose-300 font-medium">Total Price</span>
-                <span className="text-xl font-bold">{totalCartPrice.toLocaleString()}៛</span>
+                <span className="text-xl font-bold">{formatPrice(totalCartPrice)}</span>
               </div>
             </div>
             <div className="flex items-center gap-3 pr-2">
@@ -809,23 +839,23 @@ export default function App() {
       </button>
 
       {/* Footer */}
-      <footer className="bg-stone-900 text-stone-400 py-12 mt-auto border-t-4 border-rose-700">
+      <footer className="bg-stone-900 text-stone-400 py-6 mt-auto border-t-4 border-rose-700">
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <div className="flex justify-center items-center gap-4 mb-8">
+          <div className="flex justify-center items-center gap-4 mb-4">
             <div className="bg-white/10 p-2.5 rounded-2xl">
                  <img src="app-logo.svg" alt="iMaster Logo" className="w-8 h-8 object-contain" />
             </div>
             <span className="text-3xl font-black text-white tracking-tight">iMaster Café</span>
           </div>
 
-          <div className="flex justify-center items-center gap-2 mb-8">
+          <div className="flex justify-center items-center gap-2 mb-4">
             <a href="tel:0886090917" className="flex items-center gap-3 bg-rose-700/10 hover:bg-rose-700/20 text-rose-500 font-bold py-2.5 px-6 rounded-full transition-colors border border-rose-700/20 text-lg">
               <Phone className="w-5 h-5" />
               <span>088 60 90 917</span>
             </a>
           </div>
 
-          <div className="flex flex-col items-center gap-3 mb-10 px-4">
+          <div className="flex flex-col items-center gap-3 mb-4 px-4">
             <p className="text-base font-khmer text-stone-400 leading-relaxed max-w-md mx-auto">
               ខាងជើងផ្សារបែកអន្លូង (ចម្ងាយ៧០០ម៉ែត្រ) ភូមិ​បែកអន្លូង១ ឃុំ​អារក្សត្នោត ស្រុកស្ទឹងត្រង់ ខេត្តកំពង់ចាម
             </p>
@@ -840,7 +870,7 @@ export default function App() {
             </a>
           </div>
 
-          <div className="flex justify-center gap-5 mb-10">
+          <div className="flex justify-center gap-5 mb-4">
             <a href="#" className="p-3 rounded-full bg-stone-800 text-stone-400 hover:bg-[#1877F2] hover:text-white transition-all transform hover:scale-110">
               <Facebook className="w-6 h-6" />
             </a>
