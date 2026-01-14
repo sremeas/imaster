@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/imaster/', // <--- ADD THIS LINE (use your actual repo name)
+  base: '/', // <--- ADD THIS LINE (use your actual repo name)
 })
