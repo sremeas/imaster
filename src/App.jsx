@@ -502,9 +502,9 @@ export default function App() {
   // Nav Ref for auto-scrolling
   const navRef = useRef(null);
 
-  // Swipe State
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
+  // Swipe State - Moved to useRef for performance on mobile
+  const touchStartRef = useRef(null);
+  const touchEndRef = useRef(null);
   const minSwipeDistance = 50;
 
   // Helper function to format price based on currency
@@ -528,15 +528,10 @@ export default function App() {
     const container = navRef.current;
     if (!container) return;
 
-    // We need to find the button for the active category
-    // Since we map over MENU_DATA, we can find the index
     const activeIndex = MENU_DATA.findIndex(cat => cat.category === activeCategory);
     if (activeIndex === -1) return;
 
-    // Get the button element (children of container)
     const buttons = container.children[0]?.children; 
-    // container -> div (flex container) -> buttons
-    // The structure in JSX is: nav -> div -> buttons.
     
     if (buttons && buttons[activeIndex]) {
       const button = buttons[activeIndex];
@@ -558,20 +553,24 @@ export default function App() {
     setSearchQuery("");
   };
 
-  // Swipe Handlers
+  // Swipe Handlers (Optimized for Mobile)
   const onTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
+    // Ignore swipe if touching the nav bar
+    if (e.target.closest('nav')) return;
+    
+    touchEndRef.current = null;
+    touchStartRef.current = e.targetTouches[0].clientX;
   };
 
   const onTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    if (e.target.closest('nav')) return;
+    touchEndRef.current = e.targetTouches[0].clientX;
   };
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+    if (!touchStartRef.current || !touchEndRef.current) return;
     
-    const distance = touchStart - touchEnd;
+    const distance = touchStartRef.current - touchEndRef.current;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
     
@@ -754,7 +753,12 @@ export default function App() {
   }, [activeCategory, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-stone-100 font-sans pb-32 relative selection:bg-rose-100">
+    <div 
+      className="min-h-screen bg-stone-100 font-sans pb-32 relative selection:bg-rose-100"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       {/* Font Loader for Khmer Font */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap');
@@ -864,7 +868,7 @@ export default function App() {
             {MENU_DATA.map((cat) => (
               <button
                 key={cat.category}
-                onClick={() => handleCategoryClick(cat.category)}
+                onClick={(e) => handleCategoryClick(cat.category)}
                 className={`
                   flex flex-col items-center gap-1.5 px-6 py-3.5 text-sm sm:text-base font-medium transition-all duration-300 border-b-[3px]
                   ${activeCategory === cat.category && !searchQuery
@@ -885,9 +889,6 @@ export default function App() {
       {/* Main Content (Swipeable Area) */}
       <main 
         className="max-w-3xl mx-auto px-3 sm:px-4 py-5 sm:py-7 min-h-[60vh]"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
       >
         {displayData.map((section, idx) => (
           <div key={idx} className="mb-10 last:mb-0">
