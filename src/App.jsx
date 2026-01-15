@@ -25,7 +25,8 @@ import {
   MoreHorizontal,
   Send,
   Share2,
-  DollarSign
+  DollarSign,
+  Droplets
 } from 'lucide-react';
 
 // Dynamically import html2canvas to avoid build errors if not available
@@ -239,7 +240,7 @@ const MenuItem = ({ item, categoryName, onAddToCart, formatPrice }) => {
 };
 
 // ... CartModal component ...
-const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onClearCart, formatPrice }) => {
+const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onClearCart, formatPrice, onUpdateSugar }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const receiptRef = useRef(null);
 
@@ -338,7 +339,10 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
                   <span className="font-bold w-6">{item.quantity}x</span>
                   <div className="flex flex-col">
                     <span className="font-bold text-stone-800">{item.nameEn}</span>
-                    <span className="text-xs text-stone-500 font-khmer">{item.nameKh} ({item.size} - {item.type})</span>
+                    <span className="text-xs text-stone-500 font-khmer">{item.nameKh}</span>
+                    <span className="text-[10px] text-stone-500">
+                      {item.size} - {item.type} | Sugar: {item.sugar}
+                    </span>
                   </div>
                 </div>
                 <span className="font-bold whitespace-nowrap">{formatPrice(item.price * item.quantity)}</span>
@@ -406,12 +410,28 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
           ) : (
             cartItems.map((item) => (
               <div key={item.cartId} className="flex items-center justify-between bg-stone-50 p-3 rounded-xl border border-stone-100">
-                <div className="flex-1">
-                  <h4 className="font-bold text-stone-800 text-base">{item.nameEn}</h4>
-                  <p className="text-sm text-stone-500 font-khmer">{item.nameKh}</p>
-                  <div className="flex gap-2 mt-1">
+                <div className="flex-1 min-w-0 pr-2">
+                  <h4 className="font-bold text-stone-800 text-base truncate">{item.nameEn}</h4>
+                  <p className="text-sm text-stone-500 font-khmer truncate">{item.nameKh}</p>
+                  <div className="flex flex-wrap gap-2 mt-2 items-center">
                     <span className="text-xs bg-white border border-stone-200 px-2 py-0.5 rounded text-stone-500 uppercase font-medium">{item.size}</span>
                     <span className="text-xs bg-rose-50 border border-rose-100 px-2 py-0.5 rounded text-rose-600 uppercase font-medium">{item.type}</span>
+                    
+                    {/* Sugar Selector in Cart */}
+                    <div className="flex items-center gap-1 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded">
+                      <Droplets className="w-3 h-3 text-blue-500" />
+                      <select 
+                        value={item.sugar}
+                        onChange={(e) => onUpdateSugar(item.cartId, e.target.value)}
+                        className="bg-transparent text-xs text-blue-700 font-medium focus:outline-none cursor-pointer"
+                      >
+                        <option value="0%">0% Sugar</option>
+                        <option value="25%">25% Sugar</option>
+                        <option value="50%">50% Sugar</option>
+                        <option value="75%">75% Sugar</option>
+                        <option value="100%">100% Sugar</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
                 
@@ -519,14 +539,22 @@ export default function App() {
     }
   };
 
+  // Add Item to Cart (Default 100% Sugar)
   const addToCart = (item, size, type, price) => {
+    const defaultSugar = '100%';
+    
     setCart(prev => {
       // Check if exact item already exists
-      const existingItem = prev.find(i => i.id === item.id && i.size === size && i.type === type);
+      const existingItem = prev.find(i => 
+        i.id === item.id && 
+        i.size === size && 
+        i.type === type && 
+        i.sugar === defaultSugar
+      );
       
       if (existingItem) {
         return prev.map(i => 
-          (i.id === item.id && i.size === size && i.type === type)
+          (i.id === item.id && i.size === size && i.type === type && i.sugar === defaultSugar)
             ? { ...i, quantity: i.quantity + 1 }
             : i
         );
@@ -540,8 +568,39 @@ export default function App() {
         size,
         type,
         price,
+        sugar: defaultSugar,
         quantity: 1
       }];
+    });
+  };
+
+  // Update Sugar Level in Cart
+  const updateItemSugar = (cartId, newSugar) => {
+    setCart(prev => {
+      const itemToUpdate = prev.find(i => i.cartId === cartId);
+      if (!itemToUpdate) return prev;
+
+      // Check if merging is required (if another item with same details + new sugar exists)
+      const existingMatch = prev.find(i => 
+        i.cartId !== cartId &&
+        i.id === itemToUpdate.id &&
+        i.size === itemToUpdate.size &&
+        i.type === itemToUpdate.type &&
+        i.sugar === newSugar
+      );
+
+      if (existingMatch) {
+        // Merge: Increase qty of existing match, remove current item
+        return prev.map(i => {
+          if (i.cartId === existingMatch.cartId) {
+            return { ...i, quantity: i.quantity + itemToUpdate.quantity };
+          }
+          return i;
+        }).filter(i => i.cartId !== cartId);
+      } else {
+        // Just update sugar
+        return prev.map(i => i.cartId === cartId ? { ...i, sugar: newSugar } : i);
+      }
     });
   };
 
@@ -638,7 +697,7 @@ export default function App() {
   }, [activeCategory, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-stone-100 font-sans relative selection:bg-rose-100">
+    <div className="min-h-screen bg-stone-100 font-sans pb-32 relative selection:bg-rose-100">
       {/* Font Loader for Khmer Font */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap');
@@ -662,19 +721,20 @@ export default function App() {
         onUpdateQuantity={updateQuantity}
         onClearCart={clearCart}
         formatPrice={formatPrice}
+        onUpdateSugar={updateItemSugar}
       />
 
       {/* Sticky Header */}
       <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md shadow-sm border-b border-stone-100">
-        <div className="max-w-3xl mx-auto px-4 py-2">
-          <div className="flex items-center justify-between mb-2">
+        <div className="max-w-3xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl overflow-hidden shadow-lg shadow-rose-900/20 bg-white border border-stone-100 flex items-center justify-center p-1">
+              <div className="w-14 h-14 rounded-xl overflow-hidden shadow-lg shadow-rose-900/20 bg-white border border-stone-100 flex items-center justify-center p-1">
                  <img src="app-logo.svg" alt="iMaster Logo" className="w-full h-full object-contain" />
               </div>
               <div>
-                <h1 className="text-xl font-black text-stone-800 tracking-tight leading-none">iMaster Café</h1>
-                <p className="text-xs uppercase tracking-widest text-stone-500 font-bold mt-0">Coffee & Drinks</p>
+                <h1 className="text-2xl font-black text-stone-800 tracking-tight leading-none">iMaster Café</h1>
+                <p className="text-xs uppercase tracking-widest text-stone-500 font-bold mt-1.5">Coffee & Drinks</p>
               </div>
             </div>
             
@@ -682,7 +742,7 @@ export default function App() {
                 {/* Currency Switcher */}
                 <button 
                   onClick={() => setCurrency(c => c === 'KHR' ? 'USD' : 'KHR')}
-                  className="relative p-2 rounded-full hover:bg-stone-100 text-stone-600 transition-colors font-bold"
+                  className="relative p-2.5 rounded-full hover:bg-stone-100 text-stone-600 transition-colors font-bold"
                 >
                   {currency === 'KHR' ? (
                     <span className="text-xl text-emerald-600">$</span> 
@@ -694,7 +754,7 @@ export default function App() {
                 {/* Search Toggle Button */}
                 <button 
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  className={`relative p-2 rounded-full transition-all duration-300 ${isSearchOpen ? 'bg-rose-100 text-rose-700' : 'hover:bg-stone-100 text-stone-600'}`}
+                  className={`relative p-2.5 rounded-full transition-all duration-300 ${isSearchOpen ? 'bg-rose-100 text-rose-700' : 'hover:bg-stone-100 text-stone-600'}`}
                 >
                   {isSearchOpen ? <X className="w-6 h-6" /> : <Search className="w-6 h-6" />}
                 </button>
@@ -702,7 +762,7 @@ export default function App() {
                 {/* Header Cart Button (Desktop/Tablet) */}
                 <button 
                   onClick={() => setIsCartOpen(true)}
-                  className="relative p-2 rounded-full hover:bg-stone-100 text-stone-600 transition-colors"
+                  className="relative p-2.5 rounded-full hover:bg-stone-100 text-stone-600 transition-colors"
                 >
                   <ShoppingBag className="w-7 h-7" />
                   {totalCartItems > 0 && (
@@ -749,7 +809,7 @@ export default function App() {
                 key={cat.category}
                 onClick={(e) => handleCategoryClick(e, cat.category)}
                 className={`
-                  flex flex-col items-center gap-1 px-6 py-2 text-sm sm:text-base font-medium transition-all duration-300 border-b-[3px]
+                  flex flex-col items-center gap-1.5 px-6 py-3.5 text-sm sm:text-base font-medium transition-all duration-300 border-b-[3px]
                   ${activeCategory === cat.category && !searchQuery
                     ? 'border-rose-700 text-rose-700 bg-rose-50/30' 
                     : 'border-transparent text-stone-400 hover:text-stone-600 hover:bg-stone-50'}
@@ -766,11 +826,11 @@ export default function App() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-3xl mx-auto px-3 sm:px-4 py-3 sm:py-5">
+      <main className="max-w-3xl mx-auto px-3 sm:px-4 py-5 sm:py-7">
         {displayData.map((section, idx) => (
-          <div key={idx} className="mb-6 last:mb-0">
+          <div key={idx} className="mb-10 last:mb-0">
             {searchQuery && (
-              <div className="sticky top-[120px] bg-stone-100/95 backdrop-blur-sm py-2 z-10 px-1 -mx-1 mb-2">
+              <div className="sticky top-[176px] bg-stone-100/95 backdrop-blur-sm py-4 z-10 px-1 -mx-1 mb-2">
                  <h2 className="text-xl font-bold text-stone-700 flex items-center gap-3">
                   <span className="w-1.5 h-7 bg-rose-500 rounded-full"></span>
                   {section.category}
@@ -839,23 +899,23 @@ export default function App() {
       </button>
 
       {/* Footer */}
-      <footer className="bg-stone-900 text-stone-400 py-6 mt-auto border-t-4 border-rose-700">
+      <footer className="bg-stone-900 text-stone-400 py-12 mt-auto border-t-4 border-rose-700">
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <div className="flex justify-center items-center gap-4 mb-4">
+          <div className="flex justify-center items-center gap-4 mb-8">
             <div className="bg-white/10 p-2.5 rounded-2xl">
                  <img src="app-logo.svg" alt="iMaster Logo" className="w-8 h-8 object-contain" />
             </div>
             <span className="text-3xl font-black text-white tracking-tight">iMaster Café</span>
           </div>
 
-          <div className="flex justify-center items-center gap-2 mb-4">
+          <div className="flex justify-center items-center gap-2 mb-8">
             <a href="tel:0886090917" className="flex items-center gap-3 bg-rose-700/10 hover:bg-rose-700/20 text-rose-500 font-bold py-2.5 px-6 rounded-full transition-colors border border-rose-700/20 text-lg">
               <Phone className="w-5 h-5" />
               <span>088 60 90 917</span>
             </a>
           </div>
 
-          <div className="flex flex-col items-center gap-3 mb-4 px-4">
+          <div className="flex flex-col items-center gap-3 mb-10 px-4">
             <p className="text-base font-khmer text-stone-400 leading-relaxed max-w-md mx-auto">
               ខាងជើងផ្សារបែកអន្លូង (ចម្ងាយ៧០០ម៉ែត្រ) ភូមិ​បែកអន្លូង១ ឃុំ​អារក្សត្នោត ស្រុកស្ទឹងត្រង់ ខេត្តកំពង់ចាម
             </p>
@@ -870,7 +930,7 @@ export default function App() {
             </a>
           </div>
 
-          <div className="flex justify-center gap-5 mb-4">
+          <div className="flex justify-center gap-5 mb-10">
             <a href="#" className="p-3 rounded-full bg-stone-800 text-stone-400 hover:bg-[#1877F2] hover:text-white transition-all transform hover:scale-110">
               <Facebook className="w-6 h-6" />
             </a>
