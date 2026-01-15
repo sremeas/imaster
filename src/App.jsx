@@ -174,10 +174,10 @@ const getCategoryStyles = (categoryName) => {
 const PriceTag = ({ label, displayPrice, onClick }) => (
   <button 
     onClick={onClick}
-    className="flex flex-col items-center min-w-[3.2rem] bg-white/80 hover:bg-rose-50 active:bg-rose-100 rounded-md py-1 px-0.5 border border-stone-200 hover:border-rose-200 transition-all cursor-pointer group shadow-sm active:scale-95"
+    className="flex flex-col items-center min-w-[3.4rem] bg-white/80 hover:bg-rose-50 active:bg-rose-100 rounded-md py-1.5 px-0.5 border border-stone-200 hover:border-rose-200 transition-all cursor-pointer group shadow-sm active:scale-95"
   >
-    <span className="text-[10px] text-gray-500 group-hover:text-rose-600 font-bold tracking-tight">{label}</span>
-    <span className="text-xs font-bold text-rose-900 whitespace-nowrap">{displayPrice}</span>
+    <span className="text-[10px] text-gray-500 group-hover:text-rose-600 font-bold tracking-tight mb-0.5">{label}</span>
+    <span className="text-sm font-bold text-rose-900 whitespace-nowrap">{displayPrice}</span>
   </button>
 );
 
@@ -340,8 +340,8 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
                   <div className="flex flex-col">
                     <span className="font-bold text-stone-800">{item.nameEn}</span>
                     <span className="text-xs text-stone-500 font-khmer">{item.nameKh}</span>
-                    <span className="text-[10px] text-stone-500 uppercase tracking-wide">
-                        {item.size} - {item.type} | Sugar: {item.sugar}
+                    <span className="text-[10px] text-stone-500">
+                      {item.size} - {item.type} | Sugar: {item.sugar}
                     </span>
                   </div>
                 </div>
@@ -889,6 +889,9 @@ export default function App() {
       {/* Main Content (Swipeable Area) */}
       <main 
         className="max-w-3xl mx-auto px-3 sm:px-4 py-5 sm:py-7 min-h-[60vh]"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
         {displayData.map((section, idx) => (
           <div key={idx} className="mb-10 last:mb-0">
