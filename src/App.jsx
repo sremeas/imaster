@@ -174,10 +174,10 @@ const getCategoryStyles = (categoryName) => {
 const PriceTag = ({ label, displayPrice, onClick }) => (
   <button 
     onClick={onClick}
-    className="flex flex-col items-center min-w-[3.4rem] bg-white/80 hover:bg-rose-50 active:bg-rose-100 rounded-md py-1.5 px-0.5 border border-stone-200 hover:border-rose-200 transition-all cursor-pointer group shadow-sm active:scale-95"
+    className="flex flex-col items-center min-w-[4rem] bg-white/80 hover:bg-rose-50 active:bg-rose-100 rounded-md py-1.5 px-1 border border-stone-200 hover:border-rose-200 transition-all cursor-pointer group shadow-sm active:scale-95"
   >
-    <span className="text-[10px] text-gray-500 group-hover:text-rose-600 font-bold tracking-tight mb-0.5">{label}</span>
-    <span className="text-sm font-bold text-rose-900 whitespace-nowrap">{displayPrice}</span>
+    <span className="text-[11px] text-gray-500 group-hover:text-rose-600 font-bold tracking-tight mb-0.5">{label}</span>
+    <span className="text-sm font-bold text-rose-900">{displayPrice}</span>
   </button>
 );
 
