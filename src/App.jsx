@@ -340,8 +340,8 @@ const CartModal = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove, onC
                   <div className="flex flex-col">
                     <span className="font-bold text-stone-800">{item.nameEn}</span>
                     <span className="text-xs text-stone-500 font-khmer">{item.nameKh}</span>
-                    <span className="text-[10px] text-stone-500">
-                      {item.size} - {item.type} | Sugar: {item.sugar}
+                    <span className="text-[10px] text-stone-500 uppercase tracking-wide">
+                        {item.size} - {item.type} | Sugar: {item.sugar}
                     </span>
                   </div>
                 </div>
@@ -502,6 +502,11 @@ export default function App() {
   // Nav Ref for auto-scrolling
   const navRef = useRef(null);
 
+  // Swipe State
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const minSwipeDistance = 50;
+
   // Helper function to format price based on currency
   const formatPrice = (priceInRiel) => {
     if (currency === 'USD') {
@@ -517,15 +522,24 @@ export default function App() {
     }
   }, [isSearchOpen]);
 
-  const handleCategoryClick = (e, category) => {
-    setActiveCategory(category);
-    setSearchQuery("");
-    
-    // Auto-scroll logic: Center the clicked item
+  // Handle Category Change (Click or Swipe)
+  useEffect(() => {
+    // Auto-scroll logic: Center the active category button
     const container = navRef.current;
-    const button = e.currentTarget;
+    if (!container) return;
+
+    // We need to find the button for the active category
+    // Since we map over MENU_DATA, we can find the index
+    const activeIndex = MENU_DATA.findIndex(cat => cat.category === activeCategory);
+    if (activeIndex === -1) return;
+
+    // Get the button element (children of container)
+    const buttons = container.children[0]?.children; 
+    // container -> div (flex container) -> buttons
+    // The structure in JSX is: nav -> div -> buttons.
     
-    if (container && button) {
+    if (buttons && buttons[activeIndex]) {
+      const button = buttons[activeIndex];
       const containerWidth = container.offsetWidth;
       const buttonLeft = button.offsetLeft;
       const buttonWidth = button.offsetWidth;
@@ -536,6 +550,49 @@ export default function App() {
         left: scrollLeft,
         behavior: 'smooth'
       });
+    }
+  }, [activeCategory]);
+
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+    setSearchQuery("");
+  };
+
+  // Swipe Handlers
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe || isRightSwipe) {
+      const currentIndex = MENU_DATA.findIndex(cat => cat.category === activeCategory);
+      if (currentIndex === -1) return;
+
+      let newIndex = currentIndex;
+      
+      if (isLeftSwipe && currentIndex < MENU_DATA.length - 1) {
+        newIndex = currentIndex + 1; // Go to next category
+      }
+      
+      if (isRightSwipe && currentIndex > 0) {
+        newIndex = currentIndex - 1; // Go to previous category
+      }
+
+      if (newIndex !== currentIndex) {
+        setActiveCategory(MENU_DATA[newIndex].category);
+        setSearchQuery("");
+      }
     }
   };
 
@@ -807,7 +864,7 @@ export default function App() {
             {MENU_DATA.map((cat) => (
               <button
                 key={cat.category}
-                onClick={(e) => handleCategoryClick(e, cat.category)}
+                onClick={() => handleCategoryClick(cat.category)}
                 className={`
                   flex flex-col items-center gap-1.5 px-6 py-3.5 text-sm sm:text-base font-medium transition-all duration-300 border-b-[3px]
                   ${activeCategory === cat.category && !searchQuery
@@ -825,8 +882,13 @@ export default function App() {
         </nav>
       </div>
 
-      {/* Main Content */}
-      <main className="max-w-3xl mx-auto px-3 sm:px-4 py-5 sm:py-7">
+      {/* Main Content (Swipeable Area) */}
+      <main 
+        className="max-w-3xl mx-auto px-3 sm:px-4 py-5 sm:py-7 min-h-[60vh]"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         {displayData.map((section, idx) => (
           <div key={idx} className="mb-10 last:mb-0">
             {searchQuery && (
